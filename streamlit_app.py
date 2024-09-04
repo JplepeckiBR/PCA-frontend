@@ -237,8 +237,6 @@ if img is not None:
             (average_lip_color, "lips")
         ]
 
-        # fig = plt.subplots(1, len(colors), figsize(15,3))
-
         for (color, title) in colors:
             image = np.ones((100,100,3))
             image[:,:,0] *= color[0] / 255.0
@@ -247,8 +245,6 @@ if img is not None:
 
             st.image(image)
             st.write(title)
-
-
 
 
         st.image(average_skin_color, caption='facial features colors', use_column_width=True)
