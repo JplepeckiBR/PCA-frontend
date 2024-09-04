@@ -8,6 +8,7 @@ import torch
 from torch import nn
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 from image_processing import predict
+from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization
 import cv2
 
 
@@ -153,27 +154,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# Example function to run the Streamlit app
-def main():
-    # The main content of your app would go here.
-    pass
-
-if __name__ == "__main__":
-    main()
-
-# Add some user interaction
-user_input = st.text_input("Enter your name:")
-if user_input:
-    st.write(f"Hello {user_input}, you look slay!")
-
-
-picture = st.camera_input("Take a picture")
-
-if picture:
-    image = Image.open(picture)
-    st.write("Image taken!")
-    st.image(picture, caption="Captured Image", use_column_width=True)
-
 
 
     # def flip_image(img_buffer):
@@ -197,25 +177,79 @@ if picture:
     #     flipped_img = flip_image(img_buffer)
 
 
-def main():
-    st.title("Face Parsing with Segformer")
+# def main():
+#     st.title("Face Parsing with Segformer")
 
-    # Image upload
-    img = st.camera_input("Take a picture")
+#     # Image upload
+#     img = st.camera_input("Take a picture")
 
-    if img is not None:
-        # Load image
+#     if img is not None:
+#         # Load image
+#         image = Image.open(img)
+
+#         # Display the original image
+#         st.image(image, caption='Uploaded Image', use_column_width=True)
+
+#         # Run the prediction
+#         st.write("Running inference...")
+#         labels_viz = predict(image)
+
+#         # Display the segmentation mask (optional: apply a color map)
+#         st.image(labels_viz, caption='Segmentation Mask', use_column_width=True)
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+
+st.title("Face Parsing with Segformer")
+
+# Image upload
+img = st.camera_input("Take a picture")
+
+if img is not None:
+# Load image
         image = Image.open(img)
 
         # Display the original image
         st.image(image, caption='Uploaded Image', use_column_width=True)
 
-        # Run the prediction
+        # Show mask + Extract average colors
         st.write("Running inference...")
-        labels_viz = predict(image)
+        skin,average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color = extract_average_colors(image)
+
+        #predict warm neutral or cool
+        predicted_classification = predict_skin_tone_classification(extract_average_colors(image)[1])
+
+        #predict which season
+        predicted_season = predict_season(average_eye_color,average_hair_color, average_lip_color, average_brows_color )
+
+        #output palette
+        color_palette = color_palette_recommendation_and_visualization(predicted_classification,predicted_season)
 
         # Display the segmentation mask (optional: apply a color map)
-        st.image(labels_viz, caption='Segmentation Mask', use_column_width=True)
+        colors = [
+            (average_skin_color, "skin"),
+            (average_brows_color, "brows"),
+            (average_hair_color, "hair"),
+            (average_eye_color, "eyes"),
+            (average_lip_color, "lips")
+        ]
 
-if __name__ == "__main__":
-    main()
+        # fig = plt.subplots(1, len(colors), figsize(15,3))
+
+        for (color, title) in colors:
+            image = np.ones((100,100,3))
+            image[:,:,0] *= color[0] / 255.0
+            image[:,:,1] *= color[1] / 255.0
+            image[:,:,2] *= color[2] / 255.0
+
+            st.image(image)
+            st.write(title)
+
+
+
+
+        st.image(average_skin_color, caption='facial features colors', use_column_width=True)
+        st.image(color_palette, caption='your personalized color palette', use_column_width=True)
