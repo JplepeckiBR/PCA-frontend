@@ -25,8 +25,7 @@ async def flip_image(file: UploadFile = File(...)):
 #Enables the use of UploadFile methods and attributes, such as file.file, file.filename, file.content_type, etc.
 
 @app.post("/get_masks")
-def prediction(file: UploadFile = File(...)):
-# todo sort out what the file type is being received here
+async def flip_image(file: UploadFile = File(...)):
     img = Image.open(file.file)
     img_io = io.BytesIO()
     labels = predict(img)
