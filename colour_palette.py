@@ -1160,7 +1160,7 @@ def color_palette_recommendation_and_visualization(predicted_classification, pre
         plt.title(title)
         plt.axis('off')
         plt.show()
-
+        return palette
     # Create the title for visualization
     title = f"Recommended {skin_tone.capitalize()} {season.capitalize()} Palette"
 

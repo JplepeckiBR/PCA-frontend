@@ -22,10 +22,10 @@ st.markdown(
         text-align: center;
     }
     .stApp {
-        background-color: #f5f5f5;  /* Optional: You can set a background color or use a background image as well */
+        background-color: #000000;  /* Optional: You can set a background color or use a background image as well */
     }
     .centered-box {
-        background-color: #B3E5FC;
+        background-color: #000000;
         color: #0D47A1;
         padding: 20px;
         border-radius: 10px;
@@ -225,27 +225,30 @@ if img is not None:
         #predict which season
         predicted_season = predict_season(average_eye_color,average_hair_color, average_lip_color, average_brows_color )
 
-        #output palette
-        color_palette = color_palette_recommendation_and_visualization(predicted_classification,predicted_season)
 
         # Display the segmentation mask (optional: apply a color map)
         colors = [
-            (average_skin_color, "skin"),
-            (average_brows_color, "brows"),
-            (average_hair_color, "hair"),
-            (average_eye_color, "eyes"),
-            (average_lip_color, "lips")
-        ]
+        (average_skin_color, "Skin"),
+        (average_brows_color, "Brows"),
+        (average_hair_color, "Hair"),
+        (average_eye_color, "Eyes"),
+        (average_lip_color, "Lips")
+    ]
+        columns = st.columns(len(colors))
+        for col, (color, title) in zip(columns, colors):
+            # Create an image filled with the color
+            color_box = np.ones((100, 100, 3), dtype=np.uint8)
+            color_box[:, :, 0] = color[0]
+            color_box[:, :, 1] = color[1]
+            color_box[:, :, 2] = color[2]
+            # Display the color box and title in the column
+            col.image(color_box, use_column_width=True)
+            col.write(title)
 
-        for (color, title) in colors:
-            image = np.ones((100,100,3))
-            image[:,:,0] *= color[0] / 255.0
-            image[:,:,1] *= color[1] / 255.0
-            image[:,:,2] *= color[2] / 255.0
+        #output palette
+        palette = color_palette_recommendation_and_visualization(predicted_classification,predicted_season)
 
-            st.image(image)
-            st.write(title)
-
-
-        st.image(average_skin_color, caption='facial features colors', use_column_width=True)
-        st.image(color_palette, caption='your personalized color palette', use_column_width=True)
+        st.write(predicted_classification)
+        st.write(predicted_season)
+        st.write(type(palette))
+        st.image(palette, caption='your personalized color palette', use_column_width=True)
