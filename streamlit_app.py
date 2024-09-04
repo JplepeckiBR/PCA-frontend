@@ -201,7 +201,7 @@ def main():
     st.title("Face Parsing with Segformer")
 
     # Image upload
-    uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+    uploaded_file = st.camera_input("Take a picture")
 
     if uploaded_file is not None:
         # Load image
