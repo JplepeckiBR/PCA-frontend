@@ -153,74 +153,50 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# Example function to run the Streamlit app
-def main():
-    # The main content of your app would go here.
-    pass
+# # Example function to run the Streamlit app
+# def main():
+#     # The main content of your app would go here.
+#     pass
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
 
-# Add some user interaction
-user_input = st.text_input("Enter your name:")
-if user_input:
-    st.write(f"Hello {user_input}, you look slay!")
-
-
-picture = st.camera_input("Take a picture")
-
-if picture:
-    image = Image.open(picture)
-    st.write("Image taken!")
-    st.image(picture, caption="Captured Image", use_column_width=True)
+# # Add some user interaction
+# user_input = st.text_input("Enter your name:")
+# if user_input:
+#     st.write(f"Hello {user_input}, you look slay!")
 
 
+# picture = st.camera_input("Take a picture")
 
-    def flip_image(img_buffer):
-        fastapi_url = "http://localhost:8000/flip-image/"
-        files = {"file": ("filename.png", img_buffer, "image/png")}
-        # files = {'image': open(file_path, 'rb')}
-        response = requests.post(fastapi_url, files=files)
-
-        if response.status_code == 200:
-            flipped_img_data = response.content
-            flipped_img = Image.open(BytesIO(flipped_img_data))
-
-            return flipped_img_data
-
-    # prep the image to send to the FastAPI
-    if st.button('Flip Image'):
-        img_buffer = BytesIO()
-        image.save(img_buffer, format="PNG")
-        img_buffer.seek(0)
-
-        flipped_img = flip_image(img_buffer)
-
-        # if flipped_img:
-        #     st.image(flipped_img, caption="Flipped Image.", use_column_width=True)
-        # else:
-        #     st.error("An error occurred while processing the image.")
-
-        # # img_buffer2 = BytesIO()
-        # # flipped_img.save(img_buffer2, format="PNG")
-        # # img_buffer2.seek(0)
-
-        # fastapi_url2 = "http://localhost:8000/predict/"
-        # files2 = {"file": ("filename.png", flipped_img, "image/png")}
-        # # files = {'image': open(file_path, 'rb')}
-        # response = requests.post(fastapi_url2, files=files2)
-
-        # response_json = response.json()
-
-        # if 'labels' in response_json:
-        #     response_img = eval(response_json['labels'])
-        #     st.image(np.array(response_img))
-        # else:
-        #     st.error(f"Error: 'labels' not found in the response. Full response: {response_json}")
+# if picture:
+#     image = Image.open(picture)
+#     st.write("Image taken!")
+#     st.image(picture, caption="Captured Image", use_column_width=True)
 
 
-        # # st.write(response.json()['labels'])
-# Face parsing
+
+#     def flip_image(img_buffer):
+#         fastapi_url = "http://localhost:8000/flip-image/"
+#         files = {"file": ("filename.png", img_buffer, "image/png")}
+#         # files = {'image': open(file_path, 'rb')}
+#         response = requests.post(fastapi_url, files=files)
+
+#         if response.status_code == 200:
+#             flipped_img_data = response.content
+#             flipped_img = Image.open(BytesIO(flipped_img_data))
+
+#             return flipped_img_data
+
+#     # prep the image to send to the FastAPI
+#     if st.button('Flip Image'):
+#         img_buffer = BytesIO()
+#         image.save(img_buffer, format="PNG")
+#         img_buffer.seek(0)
+
+#         flipped_img = flip_image(img_buffer)
+
+
 def main():
     st.title("Face Parsing with Segformer")
 
