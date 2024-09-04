@@ -1,4 +1,10 @@
 streamlit
 numpy
 pillow
-
+fastapi
+torch
+pillow
+transformers
+matplotlib
+uvicorn
+opencv-python
