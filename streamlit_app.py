@@ -153,26 +153,26 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-# # Example function to run the Streamlit app
-# def main():
-#     # The main content of your app would go here.
-#     pass
+# Example function to run the Streamlit app
+def main():
+    # The main content of your app would go here.
+    pass
 
-# if __name__ == "__main__":
-#     main()
+if __name__ == "__main__":
+    main()
 
-# # Add some user interaction
-# user_input = st.text_input("Enter your name:")
-# if user_input:
-#     st.write(f"Hello {user_input}, you look slay!")
+# Add some user interaction
+user_input = st.text_input("Enter your name:")
+if user_input:
+    st.write(f"Hello {user_input}, you look slay!")
 
 
-# picture = st.camera_input("Take a picture")
+picture = st.camera_input("Take a picture")
 
-# if picture:
-#     image = Image.open(picture)
-#     st.write("Image taken!")
-#     st.image(picture, caption="Captured Image", use_column_width=True)
+if picture:
+    image = Image.open(picture)
+    st.write("Image taken!")
+    st.image(picture, caption="Captured Image", use_column_width=True)
 
 
 
