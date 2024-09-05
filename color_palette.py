@@ -12,12 +12,12 @@ from sklearn.model_selection import train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.preprocessing import StandardScaler
 
-def extract_average_colors(image):
+def extract_average_colors(image_path: Image.Image):
     """
     Extract average colors for skin, brows, hair, lips, and eyes from an image.
 
     Args:
-        image (str): Path to the input image.
+        image_path (str): Path to the input image.
 
     Returns:
         tuple: A tuple containing the average RGB values for skin, brows, hair, lips, and eyes.
@@ -37,8 +37,8 @@ def extract_average_colors(image):
     model = SegformerForSemanticSegmentation.from_pretrained("jonathandinu/face-parsing")
     model.to(device)
 
-    # # Load image
-    # image = Image.open(image)
+    # Load image
+    image = Image.open(image_path)
 
     # Run inference on image
     inputs = image_processor(images=image, return_tensors="pt").to(device)
@@ -126,16 +126,14 @@ def extract_average_colors(image):
 
     plt.show()
 
-    # Create a color map for visualization
-    num_classes = labels_viz.max() + 1
-    colormap = plt.get_cmap('tab20', num_classes)  # Use a colormap with enough colors
-    colored_mask = colormap(labels_viz / num_classes)  # Normalize labels to [0, 1] range
-    colored_mask = (colored_mask[:, :, :3] * 255).astype(np.uint8)  # Convert to 8-bit image
+    return average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color
 
-    # Convert to PIL Image
-    colored_mask_pil = Image.fromarray(colored_mask)
+# Example usage:
+image_path = "raw_data/images of people i know/test2.jpg"
+average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color = extract_average_colors(image_path)
 
-    return colored_mask_pil,skin,average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color
+
+
 
 
 def predict_skin_tone_classification(average_skin_color, data=None):
@@ -624,6 +622,10 @@ def predict_skin_tone_classification(average_skin_color, data=None):
     predicted_classification = predict_skin_tone_classification.model.predict(average_skin_color_normalized)
     return predicted_classification[0]
 
+predicted_classification = predict_skin_tone_classification(average_skin_color)
+print(f"The predicted skin tone is {predicted_classification}")
+
+
 
 
 def predict_season(average_eye_color, average_hair_color, average_lip_color, average_brows_color):
@@ -811,6 +813,15 @@ def predict_season(average_eye_color, average_hair_color, average_lip_color, ave
     # Map the prediction to a human-readable label
     predicted_season = label_mapping[prediction[0]]
     return predicted_season
+
+
+
+predicted_season = predict_season(average_eye_color, average_hair_color, average_lip_color, average_brows_color)
+print("Predicted Season:", predicted_season)
+
+
+
+### to be copied out
 
 
 import matplotlib.pyplot as plt
@@ -1147,9 +1158,9 @@ def color_palette_recommendation_and_visualization(predicted_classification, pre
 
     # Lookup the appropriate palette
     recommended_palette = palettes.get((skin_tone, season), [])
-    return recommended_palette
+
     # Visualize the color palette
-def visualize_color(palette, title):
+    def visualize_color(palette, title):
         """
         Visualize the color palette.
 
@@ -1164,5 +1175,16 @@ def visualize_color(palette, title):
         # Convert palette to a format suitable for imshow
         palette = np.array(palette).reshape(1, -1, 3) / 255.0  # Normalize RGB values to [0, 1]
 
+        plt.figure(figsize=(10, 2))
+        plt.imshow(palette, aspect='auto')
+        plt.title(title)
+        plt.axis('off')
+        plt.show()
 
-        return palette
+    # Create the title for visualization
+    title = f"Recommended {skin_tone.capitalize()} {season.capitalize()} Palette"
+
+    # Visualize the recommended palette
+    visualize_color(recommended_palette, title)
+
+color_palette_recommendation_and_visualization(predicted_classification, predicted_season)
