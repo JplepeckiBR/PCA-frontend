@@ -1,4 +1,3 @@
-
 import torch
 from torch import nn
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
@@ -6,11 +5,8 @@ from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.model_selection import train_test_split
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 def extract_average_colors(image):
     """

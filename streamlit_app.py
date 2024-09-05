@@ -1,21 +1,7 @@
 import streamlit as st
-import numpy as np
 from PIL import Image
-from io import BytesIO
-import requests
-import json
-import torch
-from torch import nn
 
-from image_processing import predict
-from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization, visualize_color
-import cv2
-import os
-import base64
-
-
-import streamlit as st
-
+from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization
 
 # Add custom CSS styles
 st.markdown(
@@ -124,8 +110,6 @@ if img is not None:
         predicted_season = predict_season(average_eye_color,average_hair_color, average_lip_color, average_brows_color)
 
         if img is not None:
-
-
 
             # Display the segmentation mask (optional: apply a color map)
             # Define the colors and their labels

@@ -1,11 +1,10 @@
-streamlit
+# streamlit
 numpy
 pillow
 fastapi
 torch
-pillow
 transformers
 matplotlib
-uvicorn
 opencv-python-headless
 scikit-learn
+imageio
