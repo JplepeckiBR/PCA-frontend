@@ -1,5 +1,9 @@
 import streamlit as st
 from PIL import Image
+import requests
+import io
+import numpy as np
+from io import BytesIO
 
 from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization
 
@@ -86,28 +90,71 @@ st.markdown(
 # Image upload
 st.markdown('<div class="camera-input-container">', unsafe_allow_html=True)
 img = st.camera_input("Get Your Personal Colour Analysis!")
+
+if img is not None:
+    # Display the captured image
+    img = Image.open(img)
+    st.image(img, caption='Captured Image', use_column_width=True)
+
+    # Convert the image to bytes
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='JPEG')
+    img_bytes = img_bytes.getvalue()
+
+    files = {'file': ('image.jpg', img_bytes, 'image/jpeg')}
+    response_image = requests.post("https://pca-157072779631.europe-west1.run.app/predict_image", files=files)#.json()
+
+    colored_mask = Image.open(BytesIO(response_image.content))
+
+    # st.image(image, caption="Generated Image from FastAPI", use_column_width=True)
+
+    response = requests.post("https://pca-157072779631.europe-west1.run.app/predict", files=files).json()
+
+    dict_value_types = [type(val) for val in response.values()]
+
+    skin_tone_classification = response['skin_tone_classification']
+    predicted_season = response['predicted_season']
+    skin = response['skin']
+    average_skin_color = response['average_skin_color']
+    average_brows_color = response['average_brows_color']
+    average_hair_color = response['average_hair_color']
+    average_lip_color = response['average_lip_color']
+    average_eye_color = response['average_eye_color']
+
+    # st.write(len(colored_mask))
+    # st.write(len(colored_mask[0]))
+    # st.write(len(colored_mask[1]))
+
+    # st.write(np.array(colored_mask).shape)
+
+    # st.write()
+
+    # st.write(colored_mask)
+
+    # colored_mask,skin,average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color = eval(extract)
+
 st.markdown('</div>', unsafe_allow_html=True)
 if img is not None:
 # Load image
-        image = Image.open(img)
-
 
         #color extraction
-        colored_mask,skin,average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color = extract_average_colors(image)
-
+        # colored_mask,skin,average_skin_color, average_brows_color, average_hair_color, average_lip_color, average_eye_color = extract_average_colors(image)
 
         # Optionally, you can use st.columns to display the images side-by-side
         col1, col2 = st.columns(2)
         with col1:
-            st.image(image, caption='Uploaded Image', use_column_width=True)
+            st.image(img, caption='Uploaded Image', use_column_width=True)
         with col2:
+
             st.image(colored_mask, caption='Colored Mask', use_column_width=True)
 
         #predict warm neutral or cool
-        predicted_classification = predict_skin_tone_classification(extract_average_colors(image)[2])
+        # predicted_classification = predict_skin_tone_classification(extract_average_colors(image)[2])
+        predicted_classification = skin_tone_classification
 
         #predict which season
-        predicted_season = predict_season(average_eye_color,average_hair_color, average_lip_color, average_brows_color)
+        # predicted_season = predict_season(average_eye_color,average_hair_color, average_lip_color, average_brows_color)
+        predicted_season = predicted_season
 
         if img is not None:
 
