@@ -10,6 +10,7 @@ from torch import nn
 from image_processing import predict
 from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization, visualize_color
 import cv2
+import os
 
 
 
@@ -89,15 +90,22 @@ st.markdown(
 )
 
 
+# Define the relative path to the images directory from streamlit_app.py
+images_path = os.path.join("image_website")
+
 # Create two columns for the images
 col1, col2 = st.columns(2)
 
+# Define the image paths
+image1_path = os.path.join(images_path, "default_img.png")
+image2_path = os.path.join(images_path, "default_mask.png")
+
 # Add images to the columns
 with col1:
-    st.image("../JplepeckiBR/PCA-frontend/image_website/default_img.png", use_column_width=True)
+    st.image(image1_path, use_column_width=True)
 
 with col2:
-    st.image("../amierzuhri/code/JplepeckiBR/PCA-frontend/image_website/default_mask.png", use_column_width=True)
+    st.image(image2_path, use_column_width=True)
 
 
 # Define color palettes for each season
