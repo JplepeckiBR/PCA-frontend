@@ -1138,9 +1138,9 @@ def color_palette_recommendation_and_visualization(predicted_classification, pre
 
     # Lookup the appropriate palette
     recommended_palette = palettes.get((skin_tone, season), [])
-
+    return recommended_palette
     # Visualize the color palette
-    def visualize_color(palette, title):
+def visualize_color(palette, title):
         """
         Visualize the color palette.
 
@@ -1155,14 +1155,5 @@ def color_palette_recommendation_and_visualization(predicted_classification, pre
         # Convert palette to a format suitable for imshow
         palette = np.array(palette).reshape(1, -1, 3) / 255.0  # Normalize RGB values to [0, 1]
 
-        plt.figure(figsize=(10, 2))
-        plt.imshow(palette, aspect='auto')
-        plt.title(title)
-        plt.axis('off')
-        plt.show()
+    
         return palette
-    # Create the title for visualization
-    title = f"Recommended {skin_tone.capitalize()} {season.capitalize()} Palette"
-
-    # Visualize the recommended palette
-    visualize_color(recommended_palette, title)

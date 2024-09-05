@@ -8,7 +8,7 @@ import torch
 from torch import nn
 from transformers import SegformerImageProcessor, SegformerForSemanticSegmentation
 from image_processing import predict
-from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization
+from colour_palette import extract_average_colors, predict_skin_tone_classification ,predict_season,color_palette_recommendation_and_visualization, visualize_color
 import cv2
 
 
@@ -81,7 +81,7 @@ st.markdown(
 
 # Title
 st.markdown(
-    '<h1 class="serif-font" style="color: black;">🌈 Personal Recommendation System 🌈</h1>',
+    '<h1 class="serif-font" style="color: black;">Get Your Color Recommendation</h1>',
     unsafe_allow_html=True
 )
 
@@ -155,54 +155,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-    # def flip_image(img_buffer):
-    #     fastapi_url = "http://localhost:8000/flip-image/"
-    #     files = {"file": ("filename.png", img_buffer, "image/png")}
-    #     # files = {'image': open(file_path, 'rb')}
-    #     response = requests.post(fastapi_url, files=files)
-
-    #     if response.status_code == 200:
-    #         flipped_img_data = response.content
-    #         flipped_img = Image.open(BytesIO(flipped_img_data))
-
-    #         return flipped_img_data
-
-    # # prep the image to send to the FastAPI
-    # if st.button('Flip Image'):
-    #     img_buffer = BytesIO()
-    #     image.save(img_buffer, format="PNG")
-    #     img_buffer.seek(0)
-
-    #     flipped_img = flip_image(img_buffer)
-
-
-# def main():
-#     st.title("Face Parsing with Segformer")
-
-#     # Image upload
-#     img = st.camera_input("Take a picture")
-
-#     if img is not None:
-#         # Load image
-#         image = Image.open(img)
-
-#         # Display the original image
-#         st.image(image, caption='Uploaded Image', use_column_width=True)
-
-#         # Run the prediction
-#         st.write("Running inference...")
-#         labels_viz = predict(image)
-
-#         # Display the segmentation mask (optional: apply a color map)
-#         st.image(labels_viz, caption='Segmentation Mask', use_column_width=True)
-
-# if __name__ == "__main__":
-#     main()
-
-
-
-
 st.title("Face Parsing with Segformer")
 
 # Image upload
@@ -251,4 +203,11 @@ if img is not None:
         st.write(predicted_classification)
         st.write(predicted_season)
         st.write(type(palette))
-        st.image(palette, caption='your personalized color palette', use_column_width=True)
+        st.write(palette, len(palette),type(palette[0]))
+        columns = st.columns(len(palette))
+
+        for i, color in enumerate(palette):
+            with columns[i]:
+                st.markdown(f'<div style="background-color: rgb({color[0]}, {color[1]}, {color[2]}); width: 100px; height: 100px;"></div>', unsafe_allow_html=True)
+
+        visualize_color(palette, title)
