@@ -102,13 +102,13 @@ if img is not None:
     img_bytes = img_bytes.getvalue()
 
     files = {'file': ('image.jpg', img_bytes, 'image/jpeg')}
-    response_image = requests.post("https://pca-157072779631.europe-west1.run.app/predict_image", files=files)#.json()
+    response_image = requests.post("https://pcatest-861343046122.europe-west2.run.app/predict_image", files=files)#.json()
 
     colored_mask = Image.open(BytesIO(response_image.content))
 
     # st.image(image, caption="Generated Image from FastAPI", use_column_width=True)
 
-    response = requests.post("https://pca-157072779631.europe-west1.run.app/predict", files=files).json()
+    response = requests.post("https://pcatest-861343046122.europe-west2.run.app/predict", files=files).json()
 
     dict_value_types = [type(val) for val in response.values()]
 
