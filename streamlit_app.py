@@ -103,14 +103,20 @@ if img is not None:
     files = {'file': ('image.jpg', img_bytes, 'image/jpeg')}
     response_image = requests.post("https://pcatest-861343046122.europe-west2.run.app/predict_image", files=files)
 
-    if response_image.status_code == 200 and 'image' in response_image.headers['Content-Type']:
+    # Log the status code and content type
+    st.write(f"Status Code: {response_image.status_code}")
+    st.write(f"Content-Type: {response_image.headers.get('Content-Type')}")
+    st.write(f"Response Content: {response_image.content[:100]}")  # Log the first 100 bytes of the response content
+
+    if response_image.status_code == 200 and 'image' in response_image.headers.get('Content-Type', ''):
         try:
             colored_mask = Image.open(BytesIO(response_image.content))
         except UnidentifiedImageError:
             st.error("The API did not return a valid image.")
             st.stop()
     else:
-        st.error("Failed to retrieve a valid image from the API.")
+        st.error(f"Failed to retrieve a valid image from the API. Status Code: {response_image.status_code}, Content-Type: {response_image.headers.get('Content-Type')}")
+        st.write(f"Response Content: {response_image.content[:100]}")  # Log the first 100 bytes of the response content
         st.stop()
 
     response = requests.post("https://pcatest-861343046122.europe-west2.run.app/predict", files=files).json()
